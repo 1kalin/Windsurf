@@ -18,7 +18,7 @@ git checkout -b port/met/1.78.x/EMD-xxxxx
 # Create a README note or appropriate placeholder file
 echo "# Grafting of DPC-xxxxx - Feature Description" > grafting-note.md
 git add grafting-note.md
-git commit -m "EMD/DPC-xxxxx: Graft DPC-xxxxx - Feature Description"
+git commit -m "EMD-xxxxx or DPC-xxxxx: Graft DPC-xxxxx - Feature Description"
 ```
 
 ### Step 3: Push to remote
@@ -33,14 +33,14 @@ git push -u origin port/met/1.78.x/EMD-xxxxx
 git checkout dev/metl/1.75.x
 git pull origin dev/metl/1.75.x
 # If branches have diverged, merge changes from remote
-git merge origin/dev/metl/1.75.x -m "EMD/DPC-xxxxx: merge main to resolve conflicts"
+git merge origin/dev/metl/1.75.x -m "EMD-xxxxx or DPC-xxxxx: merge main to resolve conflicts"
 git checkout -b port/met/1.75.x/EMD-xxxxx
 
 # DO THIS
 # Create a README note or appropriate placeholder file
 echo "# Grafting of DPC-xxxxx - Feature Description" > grafting-note.md
 git add grafting-note.md
-git commit -m "EMD/DPC-xxxxx: Graft DPC-xxxxx - Feature Description"
+git commit -m "EMD-xxxxx or DPC-xxxxx: Graft DPC-xxxxx - Feature Description"
 git push -u origin port/met/1.75.x/EMD-xxxxx
 ```
 
@@ -49,6 +49,6 @@ Create 2 PRs:
 1. port/met/1.78.x/EMD-xxxxx → dev/metl/1.78.x
 2. port/met/1.75.x/EMD-xxxxx → dev/metl/1.75.x
 
-PR title format: "Port/met/1.78.x/EMD-xxxxx: Graft Feature Description"
+PR title format: "Port/met/1.78.x/EMD-xxxxx or Port/met/1.78.x/DPC-xxxxx: Graft Feature Description"
 
 Use the GitHub URLs provided in the terminal output to create the PRs easily.
