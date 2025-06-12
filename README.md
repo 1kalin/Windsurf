@@ -69,9 +69,15 @@ This repository contains comprehensive documentation, templates, and instruction
    - Edit the same paths in `/global_rules.md` under the "Project Paths" section
    - Edit the paths in `/grafting/emerald-full-grafting-plan.mld`
 
-2. **Configure Global Rules**:
-   - Copy the contents of `/global_rules.md` to your AI assistant's memory
-   - For Codeium/Windsurf users: Copy to `~/.codeium/windsurf/memories/global_rules.md`
+2. **Configure Global Rules for Windsurf/Codeium**:
+   - Copy the contents of `/global_rules.md` to your Windsurf memory
+   - In Windsurf: Click the "⚙️" (Settings) icon in the bottom left corner
+   - Select "Memories" from the menu
+   - Click "Create new memory"
+   - Title it "user_global"
+   - Paste the contents of `/global_rules.md`
+   - Click "Create"
+   - **IMPORTANT**: Make sure to update all project paths in the pasted content to match your environment
 
 ## Getting Started
 
