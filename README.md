@@ -56,9 +56,22 @@ This repository contains comprehensive documentation, templates, and instruction
 
 ## Project Paths
 
-- **Emerald Project Root**: `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
-- **Emerald-API Project Root**: `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
-- **Grafting Instructions**: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting`
+> ⚠️ **IMPORTANT: YOU MUST UPDATE THESE PATHS** to match your local environment!
+
+- **Emerald Project Root**: `/Users/kalinsmolichki/IdeaProjects/EmeraldV5` ← **CHANGE THIS**
+- **Emerald-API Project Root**: `/Users/kalinsmolichki/IdeaProjects/emerald-api-4` ← **CHANGE THIS**
+- **Grafting Instructions**: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting` ← **CHANGE THIS**
+
+### Customizing Your Setup
+
+1. **Update Project Paths**:
+   - Edit the paths above in this README
+   - Edit the same paths in `/global_rules.md` under the "Project Paths" section
+   - Edit the paths in `/grafting/emerald-full-grafting-plan.mld`
+
+2. **Configure Global Rules**:
+   - Copy the contents of `/global_rules.md` to your AI assistant's memory
+   - For Codeium/Windsurf users: Copy to `~/.codeium/windsurf/memories/global_rules.md`
 
 ## Getting Started
 
