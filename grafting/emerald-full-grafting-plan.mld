@@ -1,0 +1,84 @@
+# Emerald Grafting Complete Reference
+
+## GIT Operations
+- **ALWAYS SET `export GIT_EDITOR=true` AT THE START OF ANY GIT OPERATIONS** to prevent Vim from opening during Git operations
+- For commit messages, use the following format: "EMD-XXXXX or DPC-XXXXX: <description>"
+- To resolve conflicts that are time based: use the latest version, fetch main/master, and merge into current branch, if conflicts use latest lines, and commit back and push to feature branch
+- When resolving conflicts, ignore `gradle.lockfile` as they are auto-generated and should not be manually merged
+- When performing git merge operations that require a commit message, include the message directly in the merge command using the -m flag, e.g., `git merge origin/main -m "EMD-XXXXX or DPC-XXXXX: merge main to resolve conflicts"`
+- To prevent Vim from opening during Git operations, use the `-m` flag with commit messages or set the `GIT_EDITOR` environment variable to a non-interactive editor: `export GIT_EDITOR=true`
+- If Git opens Vim (e.g., for a commit message or conflict resolution): type `i` to enter Insert mode, write your message (if applicable), press Esc to exit Insert mode, then type `:wq` and press Enter to save and quit
+
+## Emerald Libraries Version Update
+- When swapping the emerald-api version it is called emeraldLibsVersion in emerald it is in main pom.xml
+  ```bash
+  cd ~/IdeaProjects/EmeraldV5 && sed -i.bak 's/<emeraldLibsVersion>[^<]*<\/emeraldLibsVersion>/<emeraldLibsVersion>NEW-VERSION-HERE<\/emeraldLibsVersion>/' pom.xml
+  ```
+  Replace `NEW-VERSION-HERE` with your snapshot version (e.g., `11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT`)
+- To find the latest available emerald-api version tag, use: `cd ~/IdeaProjects/emerald-api-4/emerald-api && git fetch --all --tags && git tag -l | grep -v SNAPSHOT | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1`
+- To find the latest SNAPSHOT version from JFrog Artifactory, use: `curl -u "username:password" -s "https://matillion.jfrog.io/artifactory/api/storage/matillion-maven-prod-all/com/matillion/emerald/emerald-variable/[version-pattern]/" | grep -o '"uri".*"' | head -5` (replace [version-pattern] with the pattern like `11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT`)
+- JFrog Artifactory credentials can be found in the Maven settings file at `~/.m2/settings.xml`
+- To Run the dependency management script it's `python3 ./dependency-management/src/regenerate_dependencies.py` but make sure to run `mvn dependency:resolve -U` first
+
+## Grafting Procedures
+- Always ask for which branch to graft if not explicitly specified
+- Detailed grafting templates are available in `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting/`:
+  - For emerald-api project: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting/emerald-api-grafting.md`
+  - For emerald project pre-graft (version updates): `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting/emerald-grafting-pregraft.md`
+  - For emerald project post-graft (implementation changes): `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting/emerald-grafting-postgraft.md`
+- Grafting in Emerald projects should be split into two distinct phases:
+  1. **Pre-graft phase**: Updating emeraldLibsVersion in the pom.xml
+  2. **Post-graft phase**: Cherry-picking actual implementation changes if needed
+- When cherry-picking a merge commit, always use the `-m 1` option (e.g., `git cherry-pick -m 1 <commit-sha>`). This selects the first parent's changes.
+- **IMPORTANT: When looking for merge commits to cherry-pick for grafting, use `git log --merges` to find the specific merge commit PR that contains all the implementation changes.**
+- **For DPC tickets specifically, look for the merge commit with the PR number that merged the DPC branch into master/main (e.g., `Merge pull request #476 from matillion/DPC-26701`).**
+- **NEVER push grafting notes to PRs. If you create a grafting-note.md file for documentation, make sure to delete it from both branches before finalizing the PRs.**
+
+## Conflict Resolution
+- If conflicts arise with `gradle.lockfile` discard their files
+  ```bash
+  git rm <path/to/gradle.lockfile>
+  git cherry-pick --continue
+  # If Vim opens for the commit message, verify it, then type Esc, then :wq and Enter to save and quit.
+  ```
+- For other content conflicts during a cherry-pick, resolve by keeping the version of the file from your current branch (i.e., "ours"):
+  ```bash
+  git checkout --ours <path/to/conflicting-file>
+  git add <path/to/conflicting-file>
+  # Repeat for all conflicting files, then:
+  git cherry-pick --continue
+  # If Vim opens for the commit message, verify it, then type Esc, then :wq and Enter to save and quit.
+  ```
+- After resolving conflicts and continuing, remember to push the updated branch to the remote.
+- Always provide PR creation links at the end of grafting operations, using the format: `https://github.com/matillion/emerald-api/compare/dev/metl/[version]...port/met/[version]/[ticket]?expand=1`
+
+## Intelligent Merge Conflict Resolution
+- For Java files with method-level conflicts, use JDime which understands Java syntax for automatic intelligent merging:
+  ```bash
+  # For specific files:
+  jdime --mode structured --output merged.java left.java base.java right.java
+  
+  # Then add the merged file:
+  git add merged.java
+  git cherry-pick --continue
+  ```
+
+## Emerald Version Update Process
+- To update the emerald-api version in the Emerald project, simply checkout the target branch and update the emeraldLibsVersion property in the main pom.xml
+- Use the following command to update the version:
+  ```bash
+  cd ~/IdeaProjects/EmeraldV5 && sed -i.bak 's/<emeraldLibsVersion>[^<]*<\/emeraldLibsVersion>/<emeraldLibsVersion>NEW-VERSION-HERE<\/emeraldLibsVersion>/' pom.xml
+  ```
+- After updating, commit with message format: "EMD-XXXXX: Update emeraldLibsVersion to NEW-VERSION-HERE"
+- Create a branch with format: "port/met/1.75.x/EMD-XXXXX" or appropriate version
+- Always create separate branches for each supported version (e.g., 1.75.x, 1.78.x) starting from the correct base branch
+- When pushing branches that already exist on remote, use --force flag to overwrite them if necessary
+- Always provide PR creation links at the end of the operation using the format: `https://github.com/matillion/emerald/compare/dev/1.75.x...port/met/1.75.x/EMD-XXXXX?expand=1`
+- As a POST OPERATION, sometimes we may need to graft additional changes on top of the version update by following the emerald-grafting-postgraft.md procedures
+- When emerald post-grafting after a version update, we can skip emeraldLibsVersion update, in main pom, dependencies pom, and checksums as these were already handled during the emeraldLibsVersion update
+- IMPORTANT: When determining the correct version format for emeraldLibsVersion, check the build output or use `git describe --tags` in the emerald-api repository to get the base version (e.g., 13.14.0), then append the branch name and SNAPSHOT suffix (e.g., 13.14.0-port-met-1.78.x-EMD-35672-graft-SNAPSHOT)
+
+## Project Paths
+- Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
+- Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
+- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting`
