@@ -1,5 +1,38 @@
 # Windsurf Repository
 
+## 🚀 Developer Quick Start
+
+```bash
+# Clone this repository
+git clone https://github.com/1kalin/Windsurf.git
+
+# Set up Git editor to avoid Vim prompts
+export GIT_EDITOR=true
+
+# Common grafting scenarios:
+
+# 1. Emerald-API grafting
+# Follow instructions in:
+cat /grafting/emerald-api-grafting.md
+
+# 2. Emerald version update (pre-graft)
+# Follow instructions in:
+cat /grafting/emerald-grafting-pregraft.md
+
+# 3. Emerald implementation changes (post-graft)
+# Follow instructions in:
+cat /grafting/emerald-grafting-postgraft.md
+```
+
+**Common Issues & Solutions:**
+- **Merge conflicts in Java files?** Use JDime for intelligent merging
+- **Cherry-picking merge commits?** Use `git cherry-pick -m 1 <commit-hash>`
+- **Vim opened during Git operations?** Set `export GIT_EDITOR=true` beforehand
+
+**Need the full reference?** See `/grafting/emerald-full-grafting-plan.mld`
+
+---
+
 This repository contains comprehensive documentation, templates, and instructions for grafting DPC/EMD tickets across multiple version branches in Matillion's emerald-api and emerald repositories.
 
 ## Repository Structure
