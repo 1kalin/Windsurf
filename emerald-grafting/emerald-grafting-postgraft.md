@@ -8,7 +8,7 @@ The easiest and recommended way to perform the post-graft implementation changes
 
 ```bash
 # Navigate to the scripts directory
-cd ~/IdeaProjects/Windsurf/scripts
+cd ~/IdeaProjects/zero-gravity/scripts
 
 # Run the script interactively
 ./emerald-post-graft.sh

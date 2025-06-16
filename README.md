@@ -1,10 +1,10 @@
-# Windsurf Repository
+# Zero-Gravity Repository
 
 ## 🚀 Developer Quick Start
 
 ```bash
 # Clone this repository
-git clone https://github.com/1kalin/Windsurf.git
+git clone https://github.com/1kalin/zero-gravity.git
 
 # Set up Git editor to avoid Vim prompts
 export GIT_EDITOR=true
@@ -82,17 +82,17 @@ echo -e "TICKET_NUMBER\nSOURCE_COMMIT\nTARGET_VERSION\nIS_MERGE_COMMIT\n" | ./sc
 echo -e "TICKET_NUMBER\nTARGET_VERSION\n" | ./scripts/emerald-api-grafting.sh
 ```
 
-### 2. Windsurf Workflows (`/emerald-grafting/workflows`)
-GUIded workflows that integrate with Windsurf:
+### 2. Zero-Gravity Workflows (`/emerald-grafting/workflows`)
+GUIded workflows that integrate with zero-gravity:
 ```bash
-# Access workflows via Windsurf interface or directly from:
-~/IdeaProjects/Windsurf/emerald-grafting/workflows/
+# Access workflows via zero-gravity interface or directly from:
+~/IdeaProjects/zero-gravity/emerald-grafting/workflows/
 ```
 See `/emerald-grafting/workflows/README.md` for available workflows and their usage.
 
 > **Note:** The workflows exist in two locations for specific purposes:
 > - `/emerald-grafting/workflows/` - **User-facing directory** with documentation and reference materials. This is where humans should look for workflow information, examples, and guidance.
-> - `/.windsurf/workflows/` - **System integration directory** that Windsurf application reads from directly. Contains the same YML files but positioned where the system expects to find them.
+> - `/.windsurf/workflows/` - **System integration directory** that zero-gravity application reads from directly. Contains the same YML files but positioned where the system expects to find them.
 >
 > This dual structure separates user documentation from system configuration while maintaining the same underlying workflow definitions.
 
@@ -133,7 +133,7 @@ This repository contains comprehensive documentation, templates, and instruction
 
 - **Emerald Project Root**: `/Users/kalinsmolichki/IdeaProjects/EmeraldV5` ← **CHANGE THIS**
 - **Emerald-API Project Root**: `/Users/kalinsmolichki/IdeaProjects/emerald-api-4` ← **CHANGE THIS**
-- **Grafting Instructions**: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting` ← **CHANGE THIS**
+- **Grafting Instructions**: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/grafting` ← **CHANGE THIS**
 
 ### Customizing Your Setup
 
@@ -142,9 +142,9 @@ This repository contains comprehensive documentation, templates, and instruction
    - Edit the same paths in `/global_rules.md` under the "Project Paths" section
    - Edit the paths in `/grafting/emerald-full-grafting-plan.mld`
 
-2. **Configure Global Rules for Windsurf/Codeium**:
-   - Copy the contents of `/global_rules.md` to your Windsurf memory
-   - In Windsurf: Click the "⚙️" (Settings) icon in the bottom left corner
+2. **Configure Global Rules for Zero-Gravity/Codeium**:
+   - Copy the contents of `/global_rules.md` to your Zero-Gravity memory
+   - In Zero-Gravity: Click the "⚙️" (Settings) icon in the bottom left corner
    - Select "Memories" from the menu
    - Click "Create new memory"
    - Title it "user_global"

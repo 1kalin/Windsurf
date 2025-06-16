@@ -6,7 +6,7 @@
 
 ## Project Reference
 - **IMPORTANT: For all Git operations, grafting procedures, and Emerald project information, refer to the comprehensive reference document:**
-  `/Users/kalinsmolichki/IdeaProjects/Windsurf/emerald-grafting/emerald-full-grafting-plan.mld`
+  `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-full-grafting-plan.mld`
 
 - This document contains detailed information on:
   - Git operations and best practices
@@ -17,12 +17,12 @@
   - Detailed step-by-step instructions for pre-graft and post-graft operations
 
 - Individual grafting templates are still available in:
-  - For emerald-api project: `/Users/kalinsmolichki/IdeaProjects/Windsurf/emerald-grafting/emerald-api-grafting.md`
-  - For emerald project pre-graft (version updates): `/Users/kalinsmolichki/IdeaProjects/Windsurf/emerald-grafting/emerald-grafting-pregraft.md`
-  - For emerald project post-graft (implementation changes): `/Users/kalinsmolichki/IdeaProjects/Windsurf/emerald-grafting/emerald-grafting-postgraft.md`
+  - For emerald-api project: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-api-grafting.md`
+  - For emerald project pre-graft (version updates): `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-grafting-pregraft.md`
+  - For emerald project post-graft (implementation changes): `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-grafting-postgraft.md`
 
 - Automated scripts for grafting are available in:
-  `/Users/kalinsmolichki/IdeaProjects/Windsurf/scripts/`
+  `/Users/kalinsmolichki/IdeaProjects/zero-gravity/scripts/`
 
 ## General
 - When editing existing code, try to make as few changes as possible - we want to keep small PR's. Ask for surgical changes.
@@ -48,7 +48,7 @@
 ## Project Paths
 - Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
 - Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
-- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting`
+- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/grafting`
 - AI Guidance Repository: `/Users/kalinsmolichki/IdeaProjects/ai-guidance`
 
 ## Java - Unit Testing
