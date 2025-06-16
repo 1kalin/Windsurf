@@ -47,11 +47,18 @@ echo "Current directory: $(pwd)"
 echo "⚡ Fetching latest changes..."
 git fetch --all --tags
 
-# Checkout Existing Version Branch
+# Checkout or Create Branch
 BRANCH_NAME="port/met/$TARGET_VERSION/$TICKET_NUMBER"
-echo "⚡ Checking out existing branch: $BRANCH_NAME"
-git checkout "$BRANCH_NAME"
-git pull origin "$BRANCH_NAME" || echo "Branch may not exist on remote yet"
+echo "⚡ Checking out or creating branch: $BRANCH_NAME"
+
+# Try to checkout existing branch, create it if it doesn't exist
+if git checkout "$BRANCH_NAME" 2>/dev/null; then
+    echo "Branch exists, pulling latest changes..."
+    git pull origin "$BRANCH_NAME" || echo "Branch may not exist on remote yet"
+else
+    echo "Branch doesn't exist, creating from dev/$TARGET_VERSION..."
+    git checkout -b "$BRANCH_NAME" "dev/$TARGET_VERSION"
+fi
 
 # Show Source Commit Info
 echo "⚡ Source commit information:"
