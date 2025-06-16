@@ -28,15 +28,48 @@ prompt_yn() {
 echo "🚀 EMERALD POST-GRAFT SCRIPT"
 echo "============================="
 
+# Function to detect if a commit is a merge commit
+is_merge_commit() {
+    local commit_sha="$1"
+    # Count number of parents - merge commits have more than one parent
+    local parent_count=$(git show --format=%P "$commit_sha" | head -1 | wc -w)
+    
+    if [ "$parent_count" -gt 1 ]; then
+        return 0 # true in bash
+    else
+        return 1 # false in bash
+    fi
+}
+
 # Get inputs
 prompt_input "Ticket Number (EMD-XXXXX or DPC-XXXXX)" TICKET_NUMBER
 prompt_input "Source Commit SHA" SOURCE_COMMIT
 prompt_input "Target Version (e.g., 1.75.x, 1.78.x)" TARGET_VERSION
-prompt_yn "Is this a merge commit?" IS_MERGE_COMMIT
+
+# Navigate to Emerald Project temporarily to check commit type
+cd ~/IdeaProjects/EmeraldV5 > /dev/null 2>&1
+git fetch --all --tags > /dev/null 2>&1
+# Auto-detect if commit is a merge commit
+if is_merge_commit "$SOURCE_COMMIT"; then
+    AUTO_DETECTED_MERGE=true
+    MERGE_DETECTION_MSG="(Auto-detected as MERGE commit)"
+else
+    AUTO_DETECTED_MERGE=false
+    MERGE_DETECTION_MSG="(Auto-detected as REGULAR commit)"
+fi
+cd - > /dev/null 2>&1
+
+prompt_yn "Is this a merge commit? $MERGE_DETECTION_MSG" IS_MERGE_COMMIT
 
 # Setup Git Environment
 echo "⚡ Setting up Git environment..."
 export GIT_EDITOR=true
+
+echo "⚡ Commit details:"
+echo "- Ticket: $TICKET_NUMBER"
+echo "- Source commit: $SOURCE_COMMIT"
+echo "- Target version: $TARGET_VERSION"
+echo "- Is merge commit: $IS_MERGE_COMMIT"
 
 # Navigate to Emerald Project
 echo "⚡ Navigating to Emerald project..."
@@ -72,6 +105,8 @@ echo "Note: Skipping emeraldLibsVersion, dependencies pom, and checksums as per 
 
 if [ "$IS_MERGE_COMMIT" = true ]; then
     echo "Cherry-picking merge commit with -m 1 flag..."
+    echo "This will apply changes from the first parent of the merge commit"
+    echo "(equivalent to: git cherry-pick -m 1 $SOURCE_COMMIT)"
     git cherry-pick -m 1 $SOURCE_COMMIT
 else
     echo "Cherry-picking regular commit..."

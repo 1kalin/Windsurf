@@ -76,6 +76,14 @@
 - Always provide PR creation links at the end of the operation using the format: `https://github.com/matillion/emerald/compare/dev/1.75.x...port/met/1.75.x/EMD-XXXXX?expand=1`
 - As a POST OPERATION, sometimes we may need to graft additional changes on top of the version update by following the emerald-grafting-postgraft.md procedures
 - When emerald post-grafting after a version update, we can skip emeraldLibsVersion update, in main pom, dependencies pom, and checksums as these were already handled during the emeraldLibsVersion update
+
+## Handling Merge Commits
+- **Detecting Merge Commits**: A merge commit has multiple parent commits. Use `git show --format=%P <commit-sha> | wc -w` to count parents - if more than 1, it's a merge commit.
+- **Cherry-picking Merge Commits**: Always use `-m 1` flag when cherry-picking merge commits: `git cherry-pick -m 1 <commit-sha>`
+  * The `-m 1` flag specifies that we want changes from the first parent (the branch we merged into, typically main/master)
+  * Without the `-m` flag, cherry-picking a merge commit will fail with "error: commit is a merge but no -m option was given"
+- **Conflict Resolution for Merge Commits**: Follow standard conflict resolution procedures, but be extra careful to preserve the intended changes from the merge
+- **PR Creation**: When creating PRs for grafted merge commits, always include information that this was cherry-picked from a merge commit (include the original PR number if available)
 - IMPORTANT: When determining the correct version format for emeraldLibsVersion, check the build output or use `git describe --tags` in the emerald-api repository to get the base version (e.g., 13.14.0), then append the branch name and SNAPSHOT suffix (e.g., 13.14.0-port-met-1.78.x-EMD-35672-graft-SNAPSHOT)
 
 ## Project Paths
@@ -86,6 +94,11 @@
 
 ## Script Usage
 For all scripts, simply run them and follow the interactive prompts:
+
+### Handling Merge Commits in Scripts
+- The `emerald-post-graft.sh` script now auto-detects merge commits based on the number of parents
+- You can always override the automatic detection if needed
+- When using scripts for merge commits, the `-m 1` flag will be applied automatically
 
 ```bash
 # Make scripts executable (one-time setup)
