@@ -24,10 +24,42 @@ cat /grafting/emerald-grafting-pregraft.md
 cat /grafting/emerald-grafting-postgraft.md
 ```
 
+## 🛠️ Automated Solutions
+
+This repository offers **two automation approaches** for grafting operations:
+
+### 1. Shell Scripts (`/scripts`)
+Bash scripts for automating grafting tasks with interactive prompts:
+```bash
+# Make scripts executable
+chmod +x ~/IdeaProjects/Windsurf/scripts/*.sh
+
+# Run the scripts
+~/IdeaProjects/Windsurf/scripts/emerald-version-update.sh
+~/IdeaProjects/Windsurf/scripts/emerald-api-grafting.sh
+~/IdeaProjects/Windsurf/scripts/emerald-post-graft.sh
+```
+See `/scripts/README.md` for detailed usage instructions and non-interactive execution.
+
+### 2. Windsurf Workflows (`/emerald-grafting/workflows`)
+GUIded workflows that integrate with Windsurf:
+```bash
+# Access workflows via Windsurf interface or directly from:
+~/IdeaProjects/Windsurf/emerald-grafting/workflows/
+```
+See `/emerald-grafting/workflows/README.md` for available workflows and their usage.
+
+> **Note:** The workflows exist in two locations for specific purposes:
+> - `/emerald-grafting/workflows/` - **User-facing directory** with documentation and reference materials. This is where humans should look for workflow information, examples, and guidance.
+> - `/.windsurf/workflows/` - **System integration directory** that Windsurf application reads from directly. Contains the same YML files but positioned where the system expects to find them.
+>
+> This dual structure separates user documentation from system configuration while maintaining the same underlying workflow definitions.
+
 **Common Issues & Solutions:**
 - **Merge conflicts in Java files?** Use JDime for intelligent merging
 - **Cherry-picking merge commits?** Use `git cherry-pick -m 1 <commit-hash>`
 - **Vim opened during Git operations?** Set `export GIT_EDITOR=true` beforehand
+- **Need automation?** Use `/scripts` directory for bash scripts or `/emerald-grafting/workflows` for GUI workflows
 
 **Need the full reference?** See `/grafting/emerald-full-grafting-plan.mld`
 
