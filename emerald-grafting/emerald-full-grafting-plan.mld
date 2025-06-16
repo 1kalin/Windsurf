@@ -2,10 +2,10 @@
 
 ## GIT Operations
 - **ALWAYS SET `export GIT_EDITOR=true` AT THE START OF ANY GIT OPERATIONS** to prevent Vim from opening during Git operations
-- For commit messages, use the following format: "EMD-XXXXX or DPC-XXXXX: <description>"
+- For commit messages, use the following format: "EMD-XXXXX: <description>" or "DPC-XXXXX: <description>"
 - To resolve conflicts that are time based: use the latest version, fetch main/master, and merge into current branch, if conflicts use latest lines, and commit back and push to feature branch
 - When resolving conflicts, ignore `gradle.lockfile` as they are auto-generated and should not be manually merged
-- When performing git merge operations that require a commit message, include the message directly in the merge command using the -m flag, e.g., `git merge origin/main -m "EMD-XXXXX or DPC-XXXXX: merge main to resolve conflicts"`
+- When performing git merge operations that require a commit message, include the message directly in the merge command using the -m flag, e.g., `git merge origin/main -m "EMD-XXXXX: merge main to resolve conflicts"` or `git merge origin/main -m "DPC-XXXXX: merge main to resolve conflicts"`
 - To prevent Vim from opening during Git operations, use the `-m` flag with commit messages or set the `GIT_EDITOR` environment variable to a non-interactive editor: `export GIT_EDITOR=true`
 - If Git opens Vim (e.g., for a commit message or conflict resolution): type `i` to enter Insert mode, write your message (if applicable), press Esc to exit Insert mode, then type `:wq` and press Enter to save and quit
 
@@ -83,7 +83,7 @@
   ```bash
   cd ~/IdeaProjects/EmeraldV5 && sed -i.bak 's/<emeraldLibsVersion>[^<]*<\/emeraldLibsVersion>/<emeraldLibsVersion>NEW-VERSION-HERE<\/emeraldLibsVersion>/' pom.xml
   ```
-- After updating, commit with message format: "EMD-XXXXX: Update emeraldLibsVersion to NEW-VERSION-HERE"
+- After updating, commit with message format: "EMD-XXXXX: Update emeraldLibsVersion to NEW-VERSION-HERE" or "DPC-XXXXX: Update emeraldLibsVersion to NEW-VERSION-HERE"
 - Create a branch with format: "port/met/1.75.x/EMD-XXXXX" or appropriate version
 - Always create separate branches for each supported version (e.g., 1.75.x, 1.78.x) starting from the correct base branch
 - When pushing branches that already exist on remote, use --force flag to overwrite them if necessary
@@ -131,14 +131,14 @@ chmod +x /Users/kalinsmolichki/IdeaProjects/Windsurf/scripts/*.sh
 # Run emerald version update
 ./scripts/emerald-version-update.sh
 # You'll be prompted for:
-#  - Ticket Number (EMD-XXXXX)
-#  - New Version (e.g. 11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT)
+#  - Ticket Number (EMD-XXXXX or DPC-XXXXX)
+#  - New Version (e.g. 11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT or 11.148.0-port-met-1.75.x-DPC-35672-SNAPSHOT)
 #  - Target Version (e.g. 1.75.x)
 
 # Run emerald-api grafting
 ./scripts/emerald-api-grafting.sh
 # You'll be prompted for:
-#  - Ticket Number (EMD-XXXXX)
+#  - Ticket Number (EMD-XXXXX or DPC-XXXXX)
 #  - Source Commit SHA
 #  - Target Branch (e.g. dev/metl/1.75.x)
 #  - Is Merge Commit? (y/n)
@@ -146,7 +146,7 @@ chmod +x /Users/kalinsmolichki/IdeaProjects/Windsurf/scripts/*.sh
 # Run emerald post-grafting
 ./scripts/emerald-post-graft.sh
 # You'll be prompted for:
-#  - Ticket Number (EMD-XXXXX)
+#  - Ticket Number (EMD-XXXXX or DPC-XXXXX)
 #  - Source Commit SHA
 #  - Target Version (e.g. 1.75.x)
 #  - Is Merge Commit? (y/n)
