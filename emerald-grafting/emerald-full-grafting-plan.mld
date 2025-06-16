@@ -50,7 +50,21 @@
   # If Vim opens for the commit message, verify it, then type Esc, then :wq and Enter to save and quit.
   ```
 - After resolving conflicts and continuing, remember to push the updated branch to the remote.
-- Always provide PR creation links at the end of grafting operations, using the format: `https://github.com/matillion/emerald-api/compare/dev/metl/[version]...port/met/[version]/[ticket]?expand=1`
+- **PR Creation Methods:**
+  * **✅ PREFERRED METHOD - GitHub CLI (Automated)**: 
+    ```bash
+    # First ensure you're authenticated with GitHub CLI
+    gh auth login
+    
+    # Create the PR with detailed information
+    gh pr create --base dev/metl/[version] --head port/metl/[version]/[ticket] \
+      --title "[TICKET]: Description ([version])" \
+      --body "## Overview\nThis PR ports...\n\n## Implementation Details\n- Point 1\n- Point 2\n\n## Cherry-pick Information\n- Original commit: [SHA]\n- Is merge commit: Yes/No\n\n## Testing\n- Tests pass in [version] environment"
+    ```
+    * **Advantages:** Immediate PR creation, consistent format, no manual steps, direct URLs to created PRs
+    * **Workflow Integration:** Scripts automatically provide the PR command with proper values
+  
+  * **Alternative (Not Recommended) - Manual via URL**: Generate PR creation links using: `https://github.com/matillion/emerald-api/compare/dev/metl/[version]...port/met/[version]/[ticket]?expand=1`
 
 ## Intelligent Merge Conflict Resolution
 - For Java files with method-level conflicts, use JDime which understands Java syntax for automatic intelligent merging:
@@ -83,9 +97,19 @@
   * The `-m 1` flag specifies that we want changes from the first parent (the branch we merged into, typically main/master)
   * Without the `-m` flag, cherry-picking a merge commit will fail with "error: commit is a merge but no -m option was given"
 - **Conflict Resolution for Merge Commits**: Follow standard conflict resolution procedures, but be extra careful to preserve the intended changes from the merge
-- **PR Creation**: When creating PRs for grafted merge commits, always include information that this was cherry-picked from a merge commit (include the original PR number if available)
+- **PR Creation for Merge Commits**:
+  * **✅ PREFERRED METHOD - GitHub CLI (Automated)**:
+    ```bash
+    # Create PR for grafted merge commit
+    gh pr create --base dev/metl/[version] --head port/metl/[version]/[ticket] \
+      --title "[TICKET]: Description ([version])" \
+      --body "## Overview\nThis PR ports...\n\n## Cherry-pick Information\n- Original PR: #XXX\n- Original commit: [SHA]\n- This is a **cherry-picked merge commit** using \`-m 1\` flag\n- Conflicts: Yes/No\n\n## Implementation Details\n- Point 1\n- Point 2\n\n## Testing\n- Tests pass in [version] environment"
+    ```
+    * **Critical for Merge Commits:** Ensures that merge commit information is properly documented
+    * **Workflow Integration:** After successful cherry-pick with `-m 1`, immediately create the PR
+  
+  * **Alternative (NOT RECOMMENDED) - Manual Method**: If GitHub CLI is unavailable, when creating PRs via the GitHub web interface, always include information that this was cherry-picked from a merge commit (include the original PR number if available)
 - IMPORTANT: When determining the correct version format for emeraldLibsVersion, check the build output or use `git describe --tags` in the emerald-api repository to get the base version (e.g., 13.14.0), then append the branch name and SNAPSHOT suffix (e.g., 13.14.0-port-met-1.78.x-EMD-35672-graft-SNAPSHOT)
-
 ## Project Paths
 - Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
 - Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
