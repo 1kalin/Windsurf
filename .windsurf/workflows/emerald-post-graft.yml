@@ -1,0 +1,219 @@
+name: Emerald Post-Graft
+description: Cherry-pick implementation changes to Emerald project after version update
+# Reference: emerald-full-grafting-plan.mld lines 77-78, emerald-grafting-postgraft.md
+
+inputs:
+  - name: ticket_number
+    description: "Ticket number (EMD-XXXXX or DPC-XXXXX)"
+    type: string
+    required: true
+  - name: source_commit
+    description: "Source commit SHA or merge commit to cherry-pick"
+    type: string
+    required: true
+  - name: target_version
+    description: "Target version branch (e.g., 1.75.x, 1.78.x)"
+    type: string
+    required: true
+    default: "1.75.x"
+  - name: is_merge_commit
+    description: "Is this a merge commit? (requires -m 1 flag)"
+    type: boolean
+    default: false
+
+steps:
+  - name: Setup Git Environment
+    description: "Set GIT_EDITOR to prevent Vim from opening (ref: line 4)"
+    run: |
+      export GIT_EDITOR=true
+      echo "GIT_EDITOR set to prevent Vim interference"
+
+  - name: Navigate to Emerald Project
+    description: "Change to Emerald project directory (ref: line 82)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      echo "Current directory: $(pwd)"
+
+  - name: Fetch Latest Changes
+    description: "Fetch all branches and tags"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      git fetch --all --tags
+      echo "Fetched latest changes from all remotes"
+
+  - name: Checkout Existing Version Branch
+    description: "Checkout the existing version update branch (ref: line 77)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      echo "Checking out existing branch: $BRANCH_NAME"
+      
+      git checkout "$BRANCH_NAME"
+      git pull origin "$BRANCH_NAME" || echo "Branch may not exist on remote yet"
+
+  - name: Show Source Commit Info
+    description: "Display information about the commit to be cherry-picked"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      echo "================================"
+      echo "SOURCE COMMIT INFORMATION:"
+      echo "================================"
+      git show --stat ${{ inputs.source_commit }}
+      echo "================================"
+
+  - name: Cherry-pick Implementation Changes
+    description: "Cherry-pick implementation changes (ref: lines 28-29, 78)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      echo "Note: Skipping emeraldLibsVersion, dependencies pom, and checksums as per line 78"
+      
+      if [ "${{ inputs.is_merge_commit }}" = "true" ]; then
+        echo "Cherry-picking merge commit with -m 1 flag..."
+        git cherry-pick -m 1 ${{ inputs.source_commit }}
+      else
+        echo "Cherry-picking regular commit..."
+        git cherry-pick ${{ inputs.source_commit }}
+      fi
+      
+      echo "Cherry-pick completed successfully"
+
+  - name: Handle Conflicts (if any)
+    description: "Automated conflict resolution for common cases (ref: lines 41-53)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      # Check if there are conflicts
+      if git status --porcelain | grep -q "^UU\|^AA\|^DD"; then
+        echo "Conflicts detected, applying automated resolution..."
+        
+        # Handle gradle.lockfile conflicts (ref: lines 44-50)
+        for lockfile in $(git status --porcelain | grep "gradle.lockfile" | awk '{print $2}'); do
+          echo "Removing conflicted gradle.lockfile: $lockfile"
+          git rm "$lockfile"
+        done
+        
+        # Skip version-related conflicts (ref: line 78)
+        for file in $(git status --porcelain | grep -E "^UU|^AA" | awk '{print $2}'); do
+          if [[ "$file" =~ pom\.xml ]] && [[ $(git diff --name-only --diff-filter=U | grep pom.xml) ]]; then
+            echo "Skipping pom.xml emeraldLibsVersion conflicts as per line 78"
+            git checkout --ours "$file"
+            git add "$file"
+          elif [[ ! "$file" =~ gradle\.lockfile ]]; then
+            echo "Resolving conflict in $file by keeping current branch version"
+            git checkout --ours "$file"
+            git add "$file"
+          fi
+        done
+        
+        # Continue cherry-pick
+        git cherry-pick --continue
+        
+      else
+        echo "No conflicts detected"
+      fi
+
+  - name: Run Dependency Management
+    description: "Run dependency management after implementation changes"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      echo "Running Maven dependency resolution..."
+      mvn dependency:resolve -U
+      
+      echo "Running dependency management script..."
+      python3 ./dependency-management/src/regenerate_dependencies.py
+
+  - name: Commit Additional Changes
+    description: "Commit any additional changes from dependency management"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      # Check if there are any changes to commit
+      if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "Additional changes detected, committing..."
+        git add .
+        
+        COMMIT_MSG="${{ inputs.ticket_number }}: Post-graft dependency updates"
+        git commit -m "$COMMIT_MSG" || echo "No additional changes to commit"
+        
+        echo "Additional changes committed"
+      else
+        echo "No additional changes to commit"
+      fi
+
+  - name: Verify Changes
+    description: "Verify the post-graft was successful"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      echo "================================"
+      echo "RECENT COMMITS:"
+      echo "================================"
+      git log --oneline -5
+      
+      echo "================================"
+      echo "BRANCH STATUS:"
+      echo "================================"
+      git status
+
+  - name: Push Updated Branch
+    description: "Push the updated branch to remote (ref: line 75)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      
+      echo "Pushing updated branch: $BRANCH_NAME"
+      git push origin "$BRANCH_NAME" --force
+      
+      echo "Updated branch pushed successfully"
+
+  - name: Generate PR Link
+    description: "Generate PR creation link (ref: line 76)"
+    run: |
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      PR_LINK="https://github.com/matillion/emerald/compare/dev/${{ inputs.target_version }}...$BRANCH_NAME?expand=1"
+      
+      echo "================================"
+      echo "EMERALD POST-GRAFT COMPLETED!"
+      echo "================================"
+      echo "Source commit: ${{ inputs.source_commit }}"
+      echo "Branch: $BRANCH_NAME"
+      echo "Ticket: ${{ inputs.ticket_number }}"
+      echo "Target version: ${{ inputs.target_version }}"
+      echo ""
+      echo "Update existing PR or create new one here:"
+      echo "$PR_LINK"
+      echo "================================"
+
+validation:
+  - name: Verify Post-Graft Branch
+    description: "Ensure branch contains both version update and implementation changes"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      
+      if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+        echo "✅ Post-graft branch exists"
+        
+        # Check if branch has multiple commits (version + implementation)
+        AHEAD=$(git rev-list --count dev/${{ inputs.target_version }}..$BRANCH_NAME)
+        if [ "$AHEAD" -gt 1 ]; then
+          echo "✅ Branch has $AHEAD commits (version update + implementation)"
+        else
+          echo "⚠️  Branch has only $AHEAD commit(s)"
+        fi
+        
+        # Verify emeraldLibsVersion is still updated
+        if grep -q "${{ inputs.ticket_number }}" pom.xml; then
+          echo "✅ emeraldLibsVersion appears to contain ticket reference"
+        else
+          echo "⚠️  emeraldLibsVersion may not be properly updated"
+        fi
+      else
+        echo "❌ Post-graft branch verification failed"
+        exit 1
+      fi

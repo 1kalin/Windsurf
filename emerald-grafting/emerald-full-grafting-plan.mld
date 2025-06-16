@@ -81,4 +81,44 @@
 ## Project Paths
 - Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
 - Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
-- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting`
+- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/Windsurf/emerald-grafting`
+- Automated Scripts: `/Users/kalinsmolichki/IdeaProjects/Windsurf/scripts`
+
+## Script Usage
+For all scripts, simply run them and follow the interactive prompts:
+
+```bash
+# Make scripts executable (one-time setup)
+chmod +x /Users/kalinsmolichki/IdeaProjects/Windsurf/scripts/*.sh
+
+# Run emerald version update
+./scripts/emerald-version-update.sh
+# You'll be prompted for:
+#  - Ticket Number (EMD-XXXXX)
+#  - New Version (e.g. 11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT)
+#  - Target Version (e.g. 1.75.x)
+
+# Run emerald-api grafting
+./scripts/emerald-api-grafting.sh
+# You'll be prompted for:
+#  - Ticket Number (EMD-XXXXX)
+#  - Source Commit SHA
+#  - Target Branch (e.g. dev/metl/1.75.x)
+#  - Is Merge Commit? (y/n)
+
+# Run emerald post-grafting
+./scripts/emerald-post-graft.sh
+# You'll be prompted for:
+#  - Ticket Number (EMD-XXXXX)
+#  - Source Commit SHA
+#  - Target Version (e.g. 1.75.x)
+#  - Is Merge Commit? (y/n)
+
+# Run conflict resolution
+./scripts/conflict-resolution.sh
+# You'll be prompted for:
+#  - Conflicted file path
+#  - Use JDime? (y/n)
+```
+
+These scripts essentially automate all the manual procedures documented in this reference guide.

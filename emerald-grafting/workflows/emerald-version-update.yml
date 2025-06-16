@@ -1,0 +1,148 @@
+name: Emerald Version Update
+description: Updates emeraldLibsVersion in Emerald project pom.xml
+# Reference: emerald-full-grafting-plan.mld lines 12-21, 66-79
+
+inputs:
+  - name: ticket_number
+    description: "Ticket number (EMD-XXXXX or DPC-XXXXX)"
+    type: string
+    required: true
+  - name: new_version
+    description: "New emeraldLibsVersion (e.g., 11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT)"
+    type: string
+    required: true
+  - name: target_version
+    description: "Target version branch (e.g., 1.75.x, 1.78.x)"
+    type: string
+    required: true
+    default: "1.75.x"
+
+steps:
+  - name: Setup Git Environment
+    description: "Set GIT_EDITOR to prevent Vim from opening (ref: line 4)"
+    run: |
+      export GIT_EDITOR=true
+      echo "GIT_EDITOR set to prevent Vim interference"
+
+  - name: Navigate to Emerald Project
+    description: "Change to Emerald project directory (ref: line 82)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      echo "Current directory: $(pwd)"
+
+  - name: Create Version Update Branch
+    description: "Create branch with proper naming format (ref: line 73)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      git fetch --all
+      git checkout dev/${{ inputs.target_version }}
+      git pull origin dev/${{ inputs.target_version }}
+      
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      echo "Creating branch: $BRANCH_NAME"
+      
+      # Delete local branch if exists
+      git branch -D "$BRANCH_NAME" 2>/dev/null || true
+      
+      # Create new branch
+      git checkout -b "$BRANCH_NAME"
+
+  - name: Update emeraldLibsVersion
+    description: "Update version in pom.xml using sed command (ref: lines 14-16, 70)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      echo "Updating emeraldLibsVersion from:"
+      grep -n "emeraldLibsVersion" pom.xml || echo "No current version found"
+      
+      # Create backup and update version
+      sed -i.bak 's/<emeraldLibsVersion>[^<]*<\/emeraldLibsVersion>/<emeraldLibsVersion>${{ inputs.new_version }}<\/emeraldLibsVersion>/' pom.xml
+      
+      echo "Updated emeraldLibsVersion to:"
+      grep -n "emeraldLibsVersion" pom.xml
+      
+      # Show diff
+      echo "Changes made:"
+      git diff pom.xml
+
+  - name: Run Dependency Resolution
+    description: "Run Maven dependency resolution (ref: line 21)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      echo "Running Maven dependency resolution..."
+      mvn dependency:resolve -U
+
+  - name: Run Dependency Management Script
+    description: "Execute dependency management script (ref: line 21)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      echo "Running dependency management script..."
+      python3 ./dependency-management/src/regenerate_dependencies.py
+
+  - name: Commit Changes
+    description: "Commit with proper message format (ref: line 72)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      # Add all changes
+      git add .
+      
+      # Commit with proper format
+      COMMIT_MSG="${{ inputs.ticket_number }}: Update emeraldLibsVersion to ${{ inputs.new_version }}"
+      git commit -m "$COMMIT_MSG"
+      
+      echo "Committed with message: $COMMIT_MSG"
+
+  - name: Push Branch
+    description: "Push branch to remote (ref: line 75)"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      
+      # Push with force flag if branch exists remotely
+      echo "Pushing branch: $BRANCH_NAME"
+      git push origin "$BRANCH_NAME" --force
+      
+      echo "Branch pushed successfully"
+
+  - name: Generate PR Link
+    description: "Generate PR creation link (ref: line 76)"
+    run: |
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      PR_LINK="https://github.com/matillion/emerald/compare/dev/${{ inputs.target_version }}...$BRANCH_NAME?expand=1"
+      
+      echo "================================"
+      echo "VERSION UPDATE COMPLETED!"
+      echo "================================"
+      echo "Branch: $BRANCH_NAME"
+      echo "Ticket: ${{ inputs.ticket_number }}"
+      echo "Version: ${{ inputs.new_version }}"
+      echo ""
+      echo "Create PR here:"
+      echo "$PR_LINK"
+      echo "================================"
+
+validation:
+  - name: Verify Version Update
+    description: "Ensure emeraldLibsVersion was updated correctly"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      if grep -q "${{ inputs.new_version }}" pom.xml; then
+        echo "✅ Version update verified"
+      else
+        echo "❌ Version update failed"
+        exit 1
+      fi
+
+  - name: Verify Branch Creation
+    description: "Ensure branch was created and pushed"
+    run: |
+      cd ~/IdeaProjects/EmeraldV5
+      BRANCH_NAME="port/met/${{ inputs.target_version }}/${{ inputs.ticket_number }}"
+      if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+        echo "✅ Branch created successfully"
+      else
+        echo "❌ Branch creation failed"
+        exit 1
+      fi
