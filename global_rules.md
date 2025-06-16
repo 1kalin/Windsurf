@@ -49,6 +49,7 @@
 - Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
 - Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
 - Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/Windsurf/grafting`
+- AI Guidance Repository: `/Users/kalinsmolichki/IdeaProjects/ai-guidance`
 
 ## Java - Unit Testing
 - Don't comment `Given`, `When` or `Then` (or any similar section-defining comments) in unit tests.
