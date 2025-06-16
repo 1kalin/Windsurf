@@ -48,6 +48,20 @@ git checkout -b port/met/1.75.x/EMD-XXXXX
 ```
 
 2. Update the emeraldLibsVersion in pom.xml:
+### Using `gradlew dependencies` with `grep` (Recommended)
+For the most reliable approach to find the latest SNAPSHOT version, especially for quick checks, use the `gradlew dependencies` command and pipe its output to `grep "SNAPSHOT"`.
+
+**Prerequisites:**
+- You are in the `emerald-api/libs` directory of the `emerald-api-4` project.
+
+**Command:**
+```bash
+./gradlew --console=plain dependencies --no-configuration-cache | grep "SNAPSHOT"
+```
+
+**Explanation:**
+- This command will run `gradlew dependencies` and display only the lines containing "SNAPSHOT", which should include the `com.matillion.emerald` SNAPSHOT version if it's present in the dependency tree.
+- This is useful for quickly verifying the latest SNAPSHOT version without needing a full script.xml:
 ```bash
 sed -i.bak 's/<emeraldLibsVersion>[^<]*<\/emeraldLibsVersion>/<emeraldLibsVersion>NEW-VERSION-HERE<\/emeraldLibsVersion>/' pom.xml
 ```
