@@ -29,17 +29,58 @@ cat /grafting/emerald-grafting-postgraft.md
 This repository offers **two automation approaches** for grafting operations:
 
 ### 1. Shell Scripts (`/scripts`)
-Bash scripts for automating grafting tasks with interactive prompts:
-```bash
-# Make scripts executable
-chmod +x ~/IdeaProjects/Windsurf/scripts/*.sh
 
-# Run the scripts
-~/IdeaProjects/Windsurf/scripts/emerald-version-update.sh
-~/IdeaProjects/Windsurf/scripts/emerald-api-grafting.sh
-~/IdeaProjects/Windsurf/scripts/emerald-post-graft.sh
+#### Available Scripts
+
+##### `emerald-version-update.sh`
+**Purpose**: Updates `emeraldLibsVersion` in Emerald project pom.xml  
+**Usage**: `./scripts/emerald-version-update.sh`  
+**Interactive**: Prompts for ticket number, version, and target version
+
+**What it does**:
+- Creates proper branch naming
+- Updates pom.xml version
+- Runs dependency management
+- Commits and pushes changes
+- Generates PR link
+
+##### `emerald-post-graft.sh`
+**Purpose**: Cherry-picks implementation changes for postgrafting  
+**Usage**: `./scripts/emerald-post-graft.sh`  
+**Interactive**: Prompts for ticket number, source commit, target version, and merge commit status
+
+##### `emerald-api-grafting.sh`
+**Purpose**: Sets up grafting branches for emerald-api  
+**Usage**: `./scripts/emerald-api-grafting.sh`  
+**Interactive**: Prompts for ticket number and target versions
+
+#### How to Use
+
+**Run Version Update Script**:
+```bash
+# From project root
+./scripts/emerald-version-update.sh
 ```
-See `/scripts/README.md` for detailed usage instructions and non-interactive execution.
+
+**You'll be prompted for**:
+- Ticket Number: `EMD-35672`
+- New Version: `11.148.0-port-metl-1.75.x-EMD-35672-SNAPSHOT`
+- Target Version: `1.75.x`
+
+#### Non-Interactive Execution
+
+All scripts support non-interactive execution using echo with pipes:
+
+```bash
+# For emerald-version-update.sh
+echo -e "TICKET_NUMBER\nNEW_VERSION\nTARGET_VERSION\n" | ./scripts/emerald-version-update.sh
+
+# For emerald-post-graft.sh
+echo -e "TICKET_NUMBER\nSOURCE_COMMIT\nTARGET_VERSION\nIS_MERGE_COMMIT\n" | ./scripts/emerald-post-graft.sh
+
+# For emerald-api-grafting.sh
+echo -e "TICKET_NUMBER\nTARGET_VERSION\n" | ./scripts/emerald-api-grafting.sh
+```
 
 ### 2. Windsurf Workflows (`/emerald-grafting/workflows`)
 GUIded workflows that integrate with Windsurf:
