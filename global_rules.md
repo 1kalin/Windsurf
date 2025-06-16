@@ -57,5 +57,9 @@
 - NEVER USE POWERMOCK IN UNIT TESTS - if you feel the need to then let the human know as it implies the class-under-test needs improvements.
 - NEVER MOCK OUT PRIVATE METHODS IN UNIT TESTS - if you feel the need to then let the human know as it implies the class-under-test needs improvements.
 
+## Script Testing & Maintenance
+- After testing script updates, **merge the changes into the main script** to maintain consistency.
+- **Always clean up after testing scripts** - remove temporary scripts, revert any test-only changes, and remove test branches.
+
 ## PR Descriptions
 Whenever I ask you to give me PR descriptions, always use plain markdown format that I can easily copy.

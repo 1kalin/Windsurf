@@ -40,13 +40,40 @@ cd /Users/kalinsmolichki/IdeaProjects/Windsurf
 # Target Version: 1.75.x
 ```
 
+## 🔄 Auto-Populating Script Values
+
+You can **auto-populate script values** to avoid interactive prompts using `echo` with pipes:
+
+```bash
+# Auto-populate for emerald-post-graft.sh
+echo -e "EMD-35440\n785705b50f78cd789c8bc108ee5e99193d16aa2c\n1.78.x\nn\n" | ./emerald-post-graft.sh
+```
+
+**Format explanation**:
+- Each value is separated by `\n` (newline)
+- The final `\n` ensures the last prompt is answered
+- For yes/no prompts, use `y` or `n` (lowercase)
+
+**Recommended values order for each script**:
+
+### emerald-post-graft.sh:
+```
+<TICKET_NUMBER>\n<SOURCE_COMMIT>\n<TARGET_VERSION>\n<IS_MERGE_COMMIT y/n>\n
+```
+
+### emerald-version-update.sh:
+```
+<TICKET_NUMBER>\n<NEW_VERSION>\n<TARGET_VERSION>\n
+```
+
 ## ✅ Benefits Over Workflows
 
 - **✅ Works immediately** - no Windsurf version dependencies
-- **✅ Interactive prompts** - guides you through inputs
+- **✅ Interactive prompts** - guides you through inputs 
 - **✅ Error handling** - stops on any failure
 - **✅ Full automation** - same features as workflows
 - **✅ Easy to modify** - plain bash you can customize
+- **✅ Auto-population** - supports non-interactive execution
 
 ## 🔧 Prerequisites
 
