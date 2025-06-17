@@ -1,7 +1,7 @@
 # Zero-Gravity Repository
 
 <img width="619" alt="image" src="https://github.com/user-attachments/assets/117d21d9-1029-4943-8954-fbe478026039" />
-
+_Just drag-n-drop the .md files into the chat window and it will know what to do!_
 
 ## 🚀 Developer Quick Start
 
