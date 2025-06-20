@@ -1,6 +1,10 @@
 # Emerald Pre-Graft Template (emeraldLibsVersion Update)
 
-This template is for the first phase of grafting in Emerald projects - updating the emeraldLibsVersion in pom.xml.
+**Configuration**: Replace `$USERNAME` with your username or set `export USERNAME="your_username"`
+
+**Project Paths:**
+- Emerald: `/Users/$USERNAME/IdeaProjects/emerald` (default: charlottewilkins)
+- Emerald-API: `/Users/$USERNAME/IdeaProjects/emerald-api` (default: charlottewilkins)
 
 ## ⭐ Automated Script Method (Recommended)
 
@@ -8,7 +12,7 @@ The easiest and recommended way to perform the pre-graft emeraldLibsVersion upda
 
 ```bash
 # Navigate to the scripts directory
-cd ~/IdeaProjects/zero-gravity/scripts
+cd /Users/$USERNAME/IdeaProjects/zero-gravity/scripts
 
 # Run the script interactively
 ./emerald-version-update.sh
@@ -48,7 +52,7 @@ Before running any dependency commands, you MUST checkout the relevant port bran
 
 ```bash
 # Navigate to emerald-api directory
-cd ~/IdeaProjects/emerald-api-4/emerald-api
+cd /Users/$USERNAME/IdeaProjects/emerald-api
 
 # Fetch all branches and checkout the target port branch
 git fetch --all
@@ -65,7 +69,7 @@ After checking out the correct branch, use the following command to find the lat
 
 **Prerequisites:**
 - You have checked out the relevant port branch in emerald-api
-- You are in the `emerald-api/libs` directory of the `emerald-api-4` project
+- You are in the `emerald-api/libs` directory of the `emerald-api` project
 
 **Command (Split into two steps for reliability):**
 ```bash
@@ -96,7 +100,7 @@ TICKET="DPC-XXXXX"       # Replace with your actual ticket
 
 # Navigate to emerald project and setup environment
 export GIT_EDITOR=true
-cd ~/IdeaProjects/EmeraldV5
+cd /Users/$USERNAME/IdeaProjects/emerald
 
 # Create the branch
 git fetch --all

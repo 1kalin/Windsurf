@@ -1,11 +1,18 @@
 # Emerald-API Grafting Instructions (Without Cherry-Pick)
 
+**Configuration**: Replace `$USERNAME` with your username or set `export USERNAME="your_username"`
+
+**Project Paths:**
+- Emerald-API: `/Users/$USERNAME/IdeaProjects/emerald-api` (default: charlottewilkins)
+
+---
+
 ## For IntelliJ Terminal - 1.78.x and 1.75.x Versions Only
 
 ### Step 1: Setup and create branch for latest version (1.78.x)
 ```bash
 # DO THIS
-cd ~/IdeaProjects/emerald-api-4/emerald-api
+cd /Users/$USERNAME/IdeaProjects/emerald-api
 git fetch --all
 git checkout dev/metl/1.78.x
 git pull origin dev/metl/1.78.x
@@ -102,4 +109,8 @@ chmod +x ~/emerald_api_pr_links.sh
 
 # Test it
 ~/emerald_api_pr_links.sh
-```
+
+### Step 10: Find SNAPSHOT version in emerald-api using gradle
+
+```bash
+cd /Users/$USERNAME/IdeaProjects/emerald-api/libs

@@ -133,13 +133,40 @@ This repository contains comprehensive documentation, templates, and instruction
 
 ## Project Paths
 
-> ⚠️ **IMPORTANT: YOU MUST UPDATE THESE PATHS** to match your local environment!
+**⚠️ NEW USERS: Update these paths for your environment!**
 
-- **Emerald Project Root**: `/Users/kalinsmolichki/IdeaProjects/EmeraldV5` ← **CHANGE THIS**
-- **Emerald-API Project Root**: `/Users/kalinsmolichki/IdeaProjects/emerald-api-4` ← **CHANGE THIS**
-- **Grafting Instructions**: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/grafting` ← **CHANGE THIS**
+### Configuration
+Set your username by exporting the environment variable:
+```bash
+export USERNAME="your_username_here"
+```
 
-### Customizing Your Setup
+Or edit the paths directly in scripts and documentation.
+
+### Default Paths (for username: charlottewilkins)
+- **Emerald**: `/Users/charlottewilkins/IdeaProjects/emerald`
+  - Git remote: https://github.com/matillion/emerald.git
+- **Emerald-API**: `/Users/charlottewilkins/IdeaProjects/emerald-api`
+  - Git remote: https://github.com/matillion/emerald-api.git  
+  - Gradle commands run from: `/Users/charlottewilkins/IdeaProjects/emerald-api/libs`
+
+### Parametrized Paths (recommended)
+Use these variables in scripts:
+- **Emerald**: `/Users/$USERNAME/IdeaProjects/emerald`
+- **Emerald-API**: `/Users/$USERNAME/IdeaProjects/emerald-api`
+- **Emerald-API Gradle**: `/Users/$USERNAME/IdeaProjects/emerald-api/libs`
+
+### Repository Structure
+```
+/Users/$USERNAME/IdeaProjects/
+├── emerald/                 # Main emerald repository
+└── emerald-api/            # Emerald-API repository
+    └── libs/               # Run gradle commands here
+```
+
+**Note**: All scripts now support the `USERNAME` environment variable. If not set, they default to "charlottewilkins".
+
+## Customizing Your Setup
 
 1. **Update Project Paths**:
    - Edit the paths above in this README

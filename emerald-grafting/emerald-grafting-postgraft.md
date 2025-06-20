@@ -1,5 +1,12 @@
 # Emerald Post-Graft Template (Implementation Changes)
 
+**Configuration**: Replace `$USERNAME` with your username or set `export USERNAME="your_username"`
+
+**Project Paths:**
+- Emerald: `/Users/$USERNAME/IdeaProjects/emerald` (default: charlottewilkins)
+
+---
+
 This template is for the second phase of grafting in Emerald projects - cherry-picking implementation changes after emeraldLibsVersion has been updated.
 
 ## ⭐ Automated Script Method (Recommended)
@@ -34,7 +41,7 @@ The script will handle all the following steps automatically:
 1. Checkout the pre-grafted branch:
 ```bash
 export GIT_EDITOR=true
-cd ~/IdeaProjects/EmeraldV5
+cd /Users/$USERNAME/IdeaProjects/emerald
 git checkout port/metl/1.78.x/EMD-XXXXX
 ```
 
@@ -76,7 +83,7 @@ git push origin port/metl/1.78.x/EMD-XXXXX
 1. Checkout the pre-grafted branch:
 ```bash
 export GIT_EDITOR=true
-cd ~/IdeaProjects/EmeraldV5
+cd /Users/$USERNAME/IdeaProjects/emerald
 git checkout port/metl/1.75.x/EMD-XXXXX
 ```
 

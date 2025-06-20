@@ -2,6 +2,10 @@
 # Emerald API Grafting Script
 # Reference: emerald-full-grafting-plan.mld lines 22-40, emerald-api-grafting.md
 
+# Configuration - Update this for your local environment
+USERNAME=${USERNAME:-"charlottewilkins"}
+EMERALD_API_PATH="/Users/$USERNAME/IdeaProjects/emerald-api"
+
 set -e  # Exit on any error
 
 # Function to prompt for input
@@ -25,7 +29,7 @@ prompt_yn() {
     done
 }
 
-echo "🚀 EMERALD API GRAFTING SCRIPT"
+echo " EMERALD API GRAFTING SCRIPT"
 echo "==============================="
 
 # Get inputs
@@ -35,20 +39,20 @@ prompt_input "Target Branch (e.g., dev/metl/1.75.x)" TARGET_BRANCH
 prompt_yn "Is this a merge commit?" IS_MERGE_COMMIT
 
 # Setup Git Environment
-echo "⚡ Setting up Git environment..."
+echo " Setting up Git environment..."
 export GIT_EDITOR=true
 
 # Navigate to Emerald API Project
-echo "⚡ Navigating to emerald-api project..."
-cd ~/IdeaProjects/emerald-api-4/emerald-api
+echo " Navigating to emerald-api project..."
+cd "$EMERALD_API_PATH"
 echo "Current directory: $(pwd)"
 
 # Fetch Latest Changes
-echo "⚡ Fetching latest changes..."
+echo " Fetching latest changes..."
 git fetch --all --tags
 
 # Create Graft Branch
-echo "⚡ Creating graft branch..."
+echo " Creating graft branch..."
 git checkout $TARGET_BRANCH
 git pull origin $TARGET_BRANCH
 
@@ -62,13 +66,13 @@ git branch -D "$GRAFT_BRANCH" 2>/dev/null || true
 git checkout -b "$GRAFT_BRANCH"
 
 # Show Source Commit Info
-echo "⚡ Source commit information:"
+echo " Source commit information:"
 echo "================================"
 git show --stat $SOURCE_COMMIT
 echo "================================"
 
 # Cherry-pick Changes
-echo "⚡ Cherry-picking changes..."
+echo " Cherry-picking changes..."
 if [ "$IS_MERGE_COMMIT" = true ]; then
     echo "Cherry-picking merge commit with -m 1 flag..."
     git cherry-pick -m 1 $SOURCE_COMMIT
@@ -78,8 +82,8 @@ else
 fi
 
 # Handle Conflicts (automated)
-if git status --porcelain | grep -q "^UU\|^AA\|^DD"; then
-    echo "⚡ Conflicts detected, applying automated resolution..."
+if git status --porcelain | grep -q "^UU|^AA|^DD"; then
+    echo " Conflicts detected, applying automated resolution..."
     
     # Handle gradle.lockfile conflicts
     for lockfile in $(git status --porcelain | grep "gradle.lockfile" | awk '{print $2}'); do
@@ -103,14 +107,14 @@ else
 fi
 
 # Verify Changes
-echo "⚡ Recent commits:"
+echo " Recent commits:"
 git log --oneline -5
 
-echo "⚡ Branch status:"
+echo " Branch status:"
 git status
 
 # Push Graft Branch
-echo "⚡ Pushing graft branch..."
+echo " Pushing graft branch..."
 git push origin "$GRAFT_BRANCH" --force
 
 # Generate PR Link
@@ -119,7 +123,7 @@ PR_LINK="https://github.com/matillion/emerald-api/compare/$TARGET_BRANCH...$GRAF
 
 echo ""
 echo "================================"
-echo "✅ EMERALD-API GRAFTING COMPLETED!"
+echo " EMERALD-API GRAFTING COMPLETED!"
 echo "================================"
 echo "Source commit: $SOURCE_COMMIT"
 echo "Target branch: $TARGET_BRANCH"

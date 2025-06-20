@@ -5,24 +5,13 @@
 - ALWAYS WRITE INTO THE GLOBAL RULES FILE AND RELOAD IT when asked to remember something.
 
 ## Project Reference
-- **IMPORTANT: For all Git operations, grafting procedures, and Emerald project information, refer to the comprehensive reference document:**
-  `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-full-grafting-plan.mld`
-
-- This document contains detailed information on:
-  - Git operations and best practices
-  - Emerald libraries version updates
-  - Grafting procedures for both emerald and emerald-api projects
-  - Conflict resolution strategies
-  - Project paths and file locations
-  - Detailed step-by-step instructions for pre-graft and post-graft operations
-
 - Individual grafting templates are still available in:
-  - For emerald-api project: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-api-grafting.md`
-  - For emerald project pre-graft (version updates): `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-grafting-pregraft.md`
-  - For emerald project post-graft (implementation changes): `/Users/kalinsmolichki/IdeaProjects/zero-gravity/emerald-grafting/emerald-grafting-postgraft.md`
+  - For emerald-api project: `/Users/charlottewilkins/zero-gravity/emerald-grafting/emerald-api-grafting.md`
+  - For emerald project pre-graft (version updates): `/Users/charlottewilkins/zero-gravity/emerald-grafting/emerald-grafting-pregraft.md`
+  - For emerald project post-graft (implementation changes): `/Users/charlottewilkins/zero-gravity/emerald-grafting/emerald-grafting-postgraft.md`
 
 - Automated scripts for grafting are available in:
-  `/Users/kalinsmolichki/IdeaProjects/zero-gravity/scripts/`
+  `/Users/charlottewilkins/zero-gravity/scripts/`
 
 ## General
 - When editing existing code, try to make as few changes as possible - we want to keep small PR's. Ask for surgical changes.
@@ -46,10 +35,22 @@
 - Always prefer readable code over "clever" code.
 
 ## Project Paths
-- Emerald Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/EmeraldV5`
-- Emerald-API Project Root (MELT): `/Users/kalinsmolichki/IdeaProjects/emerald-api-4`
-- Grafting Instructions: `/Users/kalinsmolichki/IdeaProjects/zero-gravity/grafting`
-- AI Guidance Repository: `/Users/kalinsmolichki/IdeaProjects/ai-guidance`
+- **Emerald Project Root**: `/Users/$USERNAME/IdeaProjects/emerald` (default: charlottewilkins)
+- **Emerald-API Project Root**: `/Users/$USERNAME/IdeaProjects/emerald-api` (default: charlottewilkins)
+- **Emerald-API Gradle Commands**: `/Users/$USERNAME/IdeaProjects/emerald-api/libs` (default: charlottewilkins)
+- **Zero-Gravity Repository**: `/Users/$USERNAME/zero-gravity` (default: charlottewilkins)
+- **Emerald Grafting Docs**: `/Users/$USERNAME/zero-gravity/emerald-grafting` (default: charlottewilkins)
+- **Automated Scripts**: `/Users/$USERNAME/zero-gravity/scripts` (default: charlottewilkins)
+
+### Configuration
+Set `USERNAME` environment variable or update scripts directly:
+```bash
+export USERNAME="your_username_here"
+```
+
+### Git Repositories:
+- **Emerald**: `https://github.com/matillion/emerald.git`
+- **Emerald-API**: `https://github.com/matillion/emerald-api.git`
 
 ## Java - Unit Testing
 - Don't comment `Given`, `When` or `Then` (or any similar section-defining comments) in unit tests.

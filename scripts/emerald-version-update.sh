@@ -2,6 +2,10 @@
 # Emerald Version Update Script
 # Reference: emerald-full-grafting-plan.mld lines 12-21, 66-79
 
+# Configuration - Update this for your local environment
+USERNAME=${USERNAME:-"charlottewilkins"}
+EMERALD_PATH="/Users/$USERNAME/IdeaProjects/emerald"
+
 set -e  # Exit on any error
 
 # Function to prompt for input
@@ -11,7 +15,7 @@ prompt_input() {
     read -p "$prompt: " $var_name
 }
 
-echo "🚀 EMERALD VERSION UPDATE SCRIPT"
+echo " EMERALD VERSION UPDATE SCRIPT"
 echo "================================="
 
 # Get inputs
@@ -20,16 +24,16 @@ prompt_input "New Version (e.g., 11.148.0-port-met-1.75.x-EMD-35672-SNAPSHOT)" N
 prompt_input "Target Version (e.g., 1.75.x, 1.78.x)" TARGET_VERSION
 
 # Setup Git Environment
-echo "⚡ Setting up Git environment..."
+echo " Setting up Git environment..."
 export GIT_EDITOR=true
 
 # Navigate to Emerald Project
-echo "⚡ Navigating to Emerald project..."
-cd ~/IdeaProjects/EmeraldV5
+echo " Navigating to Emerald project..."
+cd "$EMERALD_PATH"
 echo "Current directory: $(pwd)"
 
 # Create Version Update Branch
-echo "⚡ Creating version update branch..."
+echo " Creating version update branch..."
 git fetch --all
 git checkout dev/$TARGET_VERSION
 git pull origin dev/$TARGET_VERSION
@@ -44,7 +48,7 @@ git branch -D "$BRANCH_NAME" 2>/dev/null || true
 git checkout -b "$BRANCH_NAME"
 
 # Update emeraldLibsVersion
-echo "⚡ Updating emeraldLibsVersion..."
+echo " Updating emeraldLibsVersion..."
 echo "Current version:"
 grep -n "emeraldLibsVersion" pom.xml || echo "No current version found"
 
@@ -55,21 +59,21 @@ echo "Updated version:"
 grep -n "emeraldLibsVersion" pom.xml
 
 # Run Dependency Resolution
-echo "⚡ Running Maven dependency resolution..."
+echo " Running Maven dependency resolution..."
 mvn dependency:resolve -U
 
 # Run Dependency Management Script
-echo "⚡ Running dependency management script..."
+echo " Running dependency management script..."
 python3 ./dependency-management/src/regenerate_dependencies.py
 
 # Commit Changes
-echo "⚡ Committing changes..."
+echo " Committing changes..."
 git add .
 COMMIT_MSG="$TICKET_NUMBER: Update emeraldLibsVersion to $NEW_VERSION"
 git commit -m "$COMMIT_MSG"
 
 # Push Branch
-echo "⚡ Pushing branch..."
+echo " Pushing branch..."
 git push origin "$BRANCH_NAME" --force
 
 # Generate PR Link
@@ -77,7 +81,7 @@ PR_LINK="https://github.com/matillion/emerald/compare/dev/$TARGET_VERSION...$BRA
 
 echo ""
 echo "================================"
-echo "✅ VERSION UPDATE COMPLETED!"
+echo " VERSION UPDATE COMPLETED!"
 echo "================================"
 echo "Branch: $BRANCH_NAME"
 echo "Ticket: $TICKET_NUMBER"
